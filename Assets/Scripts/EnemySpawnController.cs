@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 public class EnemySpawnController : MonoBehaviour
 {
@@ -10,6 +11,21 @@ public class EnemySpawnController : MonoBehaviour
 
     private float timer = 0.0f;
 
+    void Start()
+    {
+        if(player == null)
+        {
+            GameObject playerObject = GameObject.FindGameObjectWithTag("Player");
+            if(playerObject != null)
+            {
+                player = playerObject.transform;
+            }
+            else
+            {
+                Debug.LogError("Player is not found! Check player tag");
+            }
+        }
+    }
     void Update()
     {
         timer += Time.deltaTime;
@@ -25,5 +41,7 @@ public class EnemySpawnController : MonoBehaviour
         float randomEnemySpawnAngle = UnityEngine.Random.Range(0f, Mathf.PI * 2.0f);
         Vector2 enemySpawnDirection = new Vector2(Mathf.Cos(randomEnemySpawnAngle), Mathf.Sin(randomEnemySpawnAngle));
         Vector3 enemySpawnPosition = player.position + (Vector3) enemySpawnDirection * enemySpawnRadius;
+
+        Instantiate(enemyPrefab, enemySpawnPosition, Quaternion.identity);
     }
 }
